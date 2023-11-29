@@ -1,6 +1,8 @@
 /**
  * The contents of this file comes from https://deno.land/x/bb64@1.1.0?source
  * It has been copied because the original repository does not exist anymore (https://github.com/denjucks/bb64)
+ * Modifications:
+ *  - Include a `toBytes()` method.
  *
  * MIT License
  *
@@ -387,6 +389,21 @@ export class Base64 {
       return _decodeBase64Bytes(this.bytes);
     } else {
       return _encodeU8intToBase64String(this.bytes);
+    }
+  }
+
+  /**
+   * Returns the base64 encoded bytes from the Base64 object
+   *
+   * @public
+   *
+   * @returns {Base64} a base64 encoded bytes
+   */
+  public toBytes(): Uint8Array {
+    if (this.isBase64Encoded) {
+      return _decodeBase64BytesToUint8(this.bytes);
+    } else {
+      return new TextEncoder().encode(_encodeU8intToBase64String(this.bytes));
     }
   }
 
