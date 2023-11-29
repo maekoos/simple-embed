@@ -1,5 +1,5 @@
-import * as base64 from "https://deno.land/std@0.202.0/encoding/base64.ts";
 import * as path from "https://deno.land/std@0.204.0/path/mod.ts";
+import { Base64 } from "https://deno.land/x/bb64@1.1.0/mod.ts";
 
 type RunOptions = {
   // Input files and directories
@@ -22,10 +22,12 @@ export async function runWatching(opts: RunOptions) {
 export async function run(opts: RunOptions) {
   const out: { [key: string]: string } = {};
 
+  const encode = (b: Uint8Array) => Base64.fromUint8Array(b).toString();
+
   async function processDir(dirPath: string, destPath: string) {
     for await (const sub of Deno.readDir(dirPath)) {
       if (sub.isFile) {
-        out[path.join(destPath, sub.name)] = base64.encode(
+        out[path.join(destPath, sub.name)] = encode(
           await Deno.readFile(path.join(dirPath, sub.name)),
         );
       } else {
@@ -39,7 +41,7 @@ export async function run(opts: RunOptions) {
 
   for (const dir of opts.inputs) {
     if ((await Deno.stat(dir.src)).isFile) {
-      out[dir.dest] = base64.encode(await Deno.readFile(dir.src));
+      out[dir.dest] = encode(await Deno.readFile(dir.src));
     } else {
       await processDir(dir.src, dir.dest);
     }
@@ -47,10 +49,10 @@ export async function run(opts: RunOptions) {
 
   const outTs = `
 // Generated ${new Date().toLocaleString()}
-import * as base64 from "https://deno.land/std@0.202.0/encoding/base64.ts";
+import { Base64 } from "https://deno.land/x/bb64/mod.ts";
 
-const textFromB64 = (s: string) => atob(s);
-const bytesFromB64 = (s: string) => base64.decode(s);
+const bytesFromB64 = (s: string) => Base64.fromBase64String(s).toBytes();
+const textFromB64 = (s: string) => Base64.fromBase64String(s).toString();
 
 export const files: Record<string, {_v: string, text: () => string, bytes: () => ArrayBuffer, }> = {
 ${

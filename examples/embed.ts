@@ -1,14 +1,17 @@
 import { run, runWatching } from "../mod.ts";
 
-const inputs = [
-  {
-    src: "testfile/test.txt",
-    dest: "test.txt",
-  },
-];
+const opts = {
+  inputs: [
+    {
+      src: "testfile/test.txt",
+      dest: "test.txt",
+    },
+  ],
+  out: "embedded.ts",
+};
 
 if (Deno.args[0] === "watch") {
-  await runWatching({ inputs, out: "ebmedded.ts" });
+  await runWatching(opts);
 } else {
-  await run({ inputs, out: "embedded.ts" });
+  await run(opts);
 }

@@ -6,7 +6,7 @@ Embed any file for use in a Deno standalone executable.
 ## Usage
 The following script will embed all specified files into `embedded.ts` using simple embed.
 ```ts
-import { run, runWatching } from "...../mod.ts";
+import { run, runWatching } from "https://deno.land/x/simple_embed/mod.ts";
 
 const opts = {
   inputs: [
@@ -15,7 +15,7 @@ const opts = {
       dest: "test.txt",
     },
   ],
-  out: "ebmedded.ts"
+  out: "embedded.ts"
 }
 
 if (Deno.args[0] === "watch") {
