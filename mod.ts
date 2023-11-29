@@ -49,7 +49,7 @@ export async function run(opts: RunOptions) {
 
   const outTs = `
 // Generated ${new Date().toLocaleString()}
-import { Base64 } from "https://deno.land/x/bb64/mod.ts";
+import { Base64 } from "https://deno.land/x/bb64@1.1.0/mod.ts";
 
 const bytesFromB64 = (s: string) => Base64.fromBase64String(s).toBytes();
 const textFromB64 = (s: string) => Base64.fromBase64String(s).toString();
